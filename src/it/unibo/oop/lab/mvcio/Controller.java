@@ -1,5 +1,9 @@
 package it.unibo.oop.lab.mvcio;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
 /**
  * 
  */
@@ -28,4 +32,55 @@ public class Controller {
      * to a software that runs correctly on every platform.
      */
 
+    private File file;
+
+    /**
+     * Load default file.
+     */
+    public Controller() {
+        file = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "output.txt");
+    }
+
+    /**
+     * 
+     * @return return file
+     */
+    public File getFile() {
+        return this.file;
+    }
+
+    /**
+     * 
+     * @param file file to set
+     */
+    public void setFile(final File file) {
+        this.file = file;
+    }
+
+    /**
+     * 
+     * @param path file to set
+     */
+    public void setFile(final String path) throws IOException {
+        setFile(new File(path));
+    }
+
+    /**
+     * 
+     * @return current file path
+     */
+    public String getPath() {
+        return this.file.getPath();
+    }
+
+    /**
+     * 
+     * @param text text to write
+     * @throws IOException if PrintStream fails+
+     */
+    public void saveText(final String text) throws IOException {
+        try (PrintStream out = new PrintStream(file)) {
+            out.println(text);
+        }
+    }
 }
