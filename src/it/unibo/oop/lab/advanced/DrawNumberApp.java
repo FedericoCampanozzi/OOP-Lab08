@@ -1,34 +1,44 @@
 package it.unibo.oop.lab.advanced;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * Controller.
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
 
-    private static final int MIN = 0;
-    private static final int MAX = 100;
-    private static final int ATTEMPTS = 10;
     private final DrawNumber model;
-    private final DrawNumberView view;
+    private final List<DrawNumberView> views;
 
-    /**
-     * 
-     */
-    public DrawNumberApp() {
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
-        this.view = new DrawNumberViewImpl();
-        this.view.setObserver(this);
-        this.view.start();
+    public DrawNumberApp() throws FileNotFoundException {
+        this.model = new DrawNumberImpl();
+        views = new ArrayList<>();
+        views.add(new DrawNumberViewImpl());
+        views.add(new PrintStreamView(System.out));
+        views.add(new PrintStreamView("output.log"));
+        views.forEach((DrawNumberView v) -> { 
+            v.setObserver(this);
+            v.start();
+            }
+        );
     }
 
     @Override
     public void newAttempt(final int n) {
         try {
             final DrawResult result = model.attempt(n);
-            this.view.result(result);
+            for (final DrawNumberView view : this.views) {
+                view.result(result);
+            }
         } catch (IllegalArgumentException e) {
-            this.view.numberIncorrect();
+            for (final DrawNumberView view : this.views) {
+                view.numberIncorrect();
+            }
         } catch (AttemptsLimitReachedException e) {
-            view.limitsReached();
+            for (final DrawNumberView view : this.views) {
+                view.limitsReached();
+            }
         }
     }
 
@@ -46,7 +56,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * @param args
      *            ignored
      */
-    public static void main(final String... args) {
+    public static void main(final String... args) throws FileNotFoundException {
         new DrawNumberApp();
     }
 

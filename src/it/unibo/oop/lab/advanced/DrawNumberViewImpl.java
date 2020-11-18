@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 /**
  * Graphical {@link DrawNumberView} implementation.
  */
-public final class DrawNumberViewImpl implements DrawNumberView {
+public class DrawNumberViewImpl implements DrawNumberView {
 
     private static final String FRAME_NAME = "Draw Number App";
     private static final String QUIT = "Quit";
@@ -22,12 +22,9 @@ public final class DrawNumberViewImpl implements DrawNumberView {
     private static final String GO = "Go";
     private static final String NEW_GAME = ": a new game starts!";
 
-    private DrawNumberViewObserver observer;
-    private final JFrame frame = new JFrame(FRAME_NAME);
+    protected DrawNumberViewObserver observer;
+    protected JFrame frame = new JFrame(FRAME_NAME);
 
-    /**
-     * 
-     */
     public DrawNumberViewImpl() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(new JPanel(new BorderLayout()));
@@ -112,11 +109,16 @@ public final class DrawNumberViewImpl implements DrawNumberView {
     }
 
     @Override
-    public void limitsReached() {
+    public final void limitsReached() {
         JOptionPane.showMessageDialog(frame, "You lost" + NEW_GAME, "Lost", JOptionPane.WARNING_MESSAGE);
     }
 
     private void plainMessage(final String msg) {
         JOptionPane.showMessageDialog(frame, msg, "Result", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    @Override
+    public void displayError(final String message) {
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

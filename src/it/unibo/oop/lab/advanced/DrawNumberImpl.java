@@ -1,5 +1,9 @@
 package it.unibo.oop.lab.advanced;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Random;
 
 /**
@@ -8,12 +12,23 @@ import java.util.Random;
 public final class DrawNumberImpl implements DrawNumber {
 
     private int choice;
-    private final int min;
-    private final int max;
-    private final int attempts;
+    private int min;
+    private int max;
+    private int attempts;
     private int remainingAttempts;
     private final Random random = new Random();
 
+    public DrawNumberImpl() {
+        final InputStream in = ClassLoader.getSystemResourceAsStream("config.yml");
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            this.min = Integer.parseInt(br.readLine().split(": ")[1]);
+            this.max = Integer.parseInt(br.readLine().split(": ")[1]);
+            this.attempts = Integer.parseInt(br.readLine().split(": ")[1]);
+            this.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * @param min
      *            minimum number
